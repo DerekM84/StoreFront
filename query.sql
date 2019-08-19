@@ -1,0 +1,4 @@
+ // USE StoreFront_db;
+
+    // INSERT INTO StoreFront_db (product_name, department_name, price, quantity) 
+    // VALUES ("Live-Organism Holding Chamber" , "Evolution Supplies", 250, 3), ("Fluid Transfer Tube System","Evolution Supplies", 150, 15) ,("Lab Sterilization Kit", "Evolution Supplies", 35, 100), ("Transport Mechanism", "Relocation" , 75, 5 ) ,("High-Voltage Harness" , "Relocation", 100, 10), ("Tranquilizer Harpoon" , "Relocation", 130, 4), ("High-Flavor Training Treats", "Behavioral Repatterning", 10, 25) ,("High-Fashion Specimen-Sweater", "Pets' Lookin' Fresh", 75, 2 ), ("15 Verterbrae Pillow", "Long Necked Specimens", 30, 2), ("Tag Engraving Service", "Pets' Lookin' Fresh", 10, 5) ,("Food Dispenser Unit", "Behavioral Repatterning", 50, 10)

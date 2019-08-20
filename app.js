@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
     database: "StoreFront_db"
 });
 
-connection.connect(function (err,) {
+connection.connect(function (err, ) {
     if (err) throw err;
     firstPrompt();
 })
@@ -27,14 +27,16 @@ function firstPrompt() {
         },
 
     ]).then(function (answer) {
-        if (answer.confirm) shop();
+        if (answer.confirm) {
+            console.log(" ");
+            console.log("Thank you for visiting our facility, and congratulations on making the choice to improve your domesticated friends. Here You'll find everything you need for your GEP (Genetically Enhanced Pet) to thrive!");
+            console.log(" ");
+            shop();}
+
         else { console.log("Ok, come back soon!") }
     })
 
     function shop() {
-        console.log(" ");
-        console.log("Thank you for visiting our facility, and congratulations on making the choice to improve your domesticated friends. Here You'll find everything you need for your GEP (Genetically Enhanced Pet) to thrive!");
-        console.log(" ");
         connection.query("SELECT * FROM items", function (err, data) {
             if (err) throw err;
             displayPrompt(data);
@@ -47,7 +49,7 @@ function firstPrompt() {
 
             {
                 name: "item",
-                message: "which item would you like to add? Please Enter The ID # -->",
+                message: "which item would you like to purchase? Please Enter The ID # -->",
                 type: "input"
             }
 
@@ -72,7 +74,73 @@ function firstPrompt() {
                     type: "input"
                 }
             ]).then(function (quantity) {
-                console.log("entered " + quantity.quantity);
+                console.log(" ")
+                var qty = quantity.quantity;
+
+                console.log("You've entered " + quantity.quantity 
+                + "." + " Total Sale will be " + 
+                (quantity.quantity * response[0].price) + 
+                " Credits. Are you sure?");
+
+                inquirer.prompt([
+                    {
+                        name: "confirm",
+                        type: "confirm",
+                        message: "Please Confirm Purchase: "
+
+                    }
+                ]).then(function (resp) {
+                    console.log(" ");
+
+                    if (resp) {
+                        saleComplete(ID,qty,response);
+                        function saleComplete(ID) {
+
+                            console.log("Thank you, and enjoy!");
+                            // console.log(ID.item);
+                            // console.log(qty);
+                            // console.log(response[0].quantity);
+                            // console.log(response[0].quantity - qty);
+
+                            connection.query( ("UPDATE items SET quantity = " + (response[0].quantity - qty) + " WHERE items.id = " + ID.item), function (err) {
+                                if (err) throw err
+                            });
+                            
+                            inquirer.prompt([
+                                {
+                                    name: "afterSale",
+                                    message:"Your Credits have been charged. What Next?",
+                                    type:"list",
+                                    choices:["Browse the shop again", "Exit the store"]
+                                }
+
+                            ]).then(function(answer) {
+
+                                if (answer.afterSale === "Browse the shop again") {
+                                    console.log(" ");
+                                    console.log("Here Is Our Updated Inventory...");
+                                    console.log(" ");
+                                    shop();
+
+                                }
+
+                                else    {
+                                    console.log("Thank you for visiting! We hope you and your GEP have a wonderful day.");
+                                        }
+                            })
+
+
+                        }
+                    }
+                    if (resp === false) purchaseCanceled();
+                    function purchaseCanceled() {
+                        console.log(" ");
+                        console.log("Sale Canceled! Returning to Cashier");
+                        console.log(" ");
+                        shop();
+                    }
+
+                })
             })
         })
     }
